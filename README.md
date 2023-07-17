@@ -33,3 +33,9 @@ and import it in the root layout
 # Create application on spotify
 Go to developer.spotify.com
 
+> npm i @types/spotify-api
+type definitions of all spotify code
+
+## icon package
+> npm i lucide-svelte
+

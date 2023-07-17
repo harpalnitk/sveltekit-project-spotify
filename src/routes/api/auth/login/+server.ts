@@ -15,17 +15,27 @@ const generateRandomString = (length: number) => {
 };
 
 const state = generateRandomString(16);
+
+//creates ok challenge ; a pop up prsented to user
+// to accept before login begins
 const challenge = pkce.create();
 
 
 // scope is the list of possibilities presented to user
+// whatever permissions are required from user from his spotify account
 const scope =
 	'ugc-image-upload user-modify-playback-state user-read-playback-state user-read-currently-playing user-follow-modify user-follow-read user-read-recently-played user-read-playback-position user-top-read playlist-read-collaborative playlist-modify-public playlist-read-private playlist-modify-private app-remote-control streaming user-read-email user-read-private user-library-modify user-library-read';
 
-export const GET: RequestHandler = async () => {
+export const GET: RequestHandler = async ({cookies}) => {
 	//return new Response('some text');
 
-	throw redirect(
+//the response will be matched and verified with these
+//stored cookies
+cookies.set('spotify_auth_state', state);
+cookies.set('spotify_auth_chllenge_verifier', challenge.code_verifier);
+	
+
+throw redirect(
 		307,
 		`https://accounts.spotify.com/authorize?${new URLSearchParams({
 			response_type: 'code',
@@ -38,3 +48,6 @@ export const GET: RequestHandler = async () => {
 		})}`
 	);
 };
+
+//redirect_uri: `${BASE_URL}/api/auth/callback`,
+// redirect_uri Also need to be set on spotify app

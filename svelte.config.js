@@ -10,7 +10,7 @@ const config = {
 	//preprocess: vitePreprocess(),
 	preprocess: sveltePreprocess({
 		scss: {
-			prependData: '@use "../styles/functions";@use "@unsass/breakpoint";'
+			prependData: '@use "src/styles/functions";@use "@unsass/breakpoint";'
 		}
 	}),
 
@@ -18,7 +18,10 @@ const config = {
 		// adapter-auto only supports some environments, see https://kit.svelte.dev/docs/adapter-auto for a list.
 		// If your environment is not supported or you settled on a specific environment, switch out the adapter.
 		// See https://kit.svelte.dev/docs/adapters for more information about adapters.
-		adapter: adapter()
+		adapter: adapter(),
+		alias: {
+			$components: 'src/lib/components'
+		}
 	}
 };
 

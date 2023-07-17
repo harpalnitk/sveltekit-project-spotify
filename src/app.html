@@ -1,6 +1,12 @@
 <!DOCTYPE html>
-<html lang="en">
+
+<!-- no-js a class added by us to style differently if js is not enabled 
+if js is enabled we will change this class to js -->
+<html lang="en" class="no-js">
 	<head>
+		<!-- script whic checks if js is enabled and accordingly replaces
+		class in html tag  -->
+		<script>(function(H){H.className=H.className.replace(/\bno-js\b/,'js')})(document.documentElement)</script>
 		<meta charset="utf-8" />
 		<link rel="icon" href="%sveltekit.assets%/favicon.png" />
 		<meta name="viewport" content="width=device-width" />
