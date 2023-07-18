@@ -39,3 +39,5 @@ type definitions of all spotify code
 ## icon package
 > npm i lucide-svelte
 
+## Using typescript to extend native html attributes
+

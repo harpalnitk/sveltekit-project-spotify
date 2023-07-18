@@ -1,4 +1,30 @@
 <script lang="ts">
+
+//Using typescript to extend native html attributes
+import type {HTMLAnchorAttributes, HTMLButtonAttributes} from 'svelte/elements';
+
+//generics are types that can be specified at runtime using user input
+type Element = $$Generic<'button' | 'a'>
+
+interface ButtonComponentElements {
+	button: HTMLButtonAttributes;
+	a: HTMLAnchorAttributes;
+}
+
+
+	type $$Props = ButtonComponentElements[Element] & {
+		element: Element;
+		variant?: 'solid' | 'outline' | 'danger';
+		className?: string;
+	}
+
+
+	// with all the above code we can use native html attributes like 
+// href, disabled etc on our custom button element with autocomplete 
+// and errors
+
+
+
 	export let element: 'button' | 'a';
 	export let variant: 'solid' | 'outline' | 'danger' = 'solid';
 	export let className: string = '';
@@ -14,11 +40,15 @@ use svelte:element
 which has this and this can receive html element
 
 -->
+<!-- svelte-ignore a11y-no-static-element-interactions -->
+
+<!-- {...$$restProps} any other props passed to this component  -->
 <svelte:element
 	this={element}
 	class="button button-{variant} {className}"
 	on:click
 	{...$$restProps}
+	
 >
 	<slot />
 </svelte:element>
@@ -36,7 +66,7 @@ which has this and this can receive html element
 		&.button-solid {
 			background-color: var(--accent-color);
 			color: #000;
-			border: 2px solid var(--accent-color);
+			border: 2px solid var(--accent-color);// to have same height as outline button when used together
 		}
 		&.button-outline {
 			background: none;
