@@ -7,7 +7,16 @@
     import type { LayoutData } from './$types';
     import {Navigation} from '$components';
 	import {Header} from '$components';
+	import {page} from '$app/stores';
+	import NProgress from 'nprogress';
+	import { hideAll } from 'tippy.js';
+    import 'nprogress/nprogress.css';
+	import { afterNavigate, beforeNavigate } from '$app/navigation';
 
+	// we just need bar and not the spinner
+	// color and styles added in main.css
+	NProgress.configure({ showSpinner: false });
+    	
 	let topbar: HTMLElement;
 	let scrollY: number;
 	let headerOpacity = 0;
@@ -21,9 +30,34 @@
 
 export let data: LayoutData;
 $: user = data.user;
+
+afterNavigate(() => {
+		NProgress.done();
+	});
+
+	beforeNavigate(() => {
+		NProgress.start();
+		hideAll();
+	});
 </script>
 
 <svelte:window bind:scrollY />
+<svelte:head>
+	<title>Spotify {$page.data.title ? ` - ${$page.data.title}` : ''}</title>
+
+</svelte:head>
+
+
+<!-- if user does not want to tab through all links of 
+	menu and direcctly want to go to links of main 
+	page..functionality implemented in layout.svelte
+	 file 
+	
+	styled in main.css file-->
+
+{#if user}
+<a href="#main-content" class="skip-link">Skip to Content</a>
+{/if}
 
 <div id="main">
 	{#if user}
@@ -56,6 +90,13 @@ $: user = data.user;
 
 	#main {
 		display: flex;
+		//keep sidebar and main content on top of each other 
+		// if js is disabled
+		:global(html.no-js) &{
+			@include breakpoint.down('md'){
+               display: block;
+			}
+		}
 		
 		#content {
 			flex: 1;
@@ -68,6 +109,17 @@ $: user = data.user;
 				align-items: center;
 				width: 100%;
 				z-index: 100;
+				:global(html.no-js) &{
+			@include breakpoint.down('md'){
+              position: sticky;
+			  top:0;
+			  background-color: var(--header-color);
+			  height: auto; // to prevent user menu button
+			  //which are always shown in header.svelt file
+			  //from collapsing on each other
+			  padding: 10px 20px;
+			}
+		}
 				.topbar-bg {
 					position: absolute;
 					width: 100%;
@@ -91,6 +143,12 @@ $: user = data.user;
 				// so we don't need padding top
 				&.logged-in {
 					padding-top: calc(30px + var(--header-height));
+					
+					:global(html.no-js) &{
+			         @include breakpoint.down('md'){
+                     padding-top: 30px;
+			}
+		}
 				}
 			}
 		}

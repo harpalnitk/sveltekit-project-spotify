@@ -90,7 +90,7 @@ a {
 }
 
 // text be visually hidden but can be read by screenreaders 
-.visually-hidden {
+.visually-hidden, .skip-link:not(:focus) {
 	clip: rect(0 0 0 0);
 	clip-path: inset(100%);
 	height: 1px;
@@ -98,4 +98,25 @@ a {
 	position: absolute;
 	white-space: nowrap;
 	width: 1px;
+}
+
+// skip to main content; in layout file
+// we want to see it only on focus i.e. when user
+//navigate by prssing tab button
+
+.skip-link:focus{
+	position: absolute;
+	z-index: 200;
+	background: var(--accent-color);
+	color: #fff;
+	padding: 10px;
+	top: 10px;
+	left: 10px;
+	outline: 2px solid;
+	font-weight: 500	;
+
+}
+
+#nprogress .bar {
+	background: var(--accent-color) !important;
 }

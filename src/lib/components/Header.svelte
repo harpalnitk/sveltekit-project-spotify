@@ -66,6 +66,11 @@ $: user = $page.data.user;
 		justify-content: space-between;
 		align-items: center;
 		width: 100%;
+		:global(html.no-js) &{
+			@include breakpoint.down('md'){
+				justify-content:flex-start;
+			}
+		}
 	}
 	.profile-button {
 		background: none;
@@ -76,6 +81,14 @@ $: user = $page.data.user;
 		align-items: center;
 		color: var(--text-color);
 		cursor: pointer;
+
+		:global(html.no-js) &{
+			// hide the user menu button if js is disabled
+             display:none;
+		}
+
+
+
 		:global(.profile-arrow) {
 			margin-left: 3px;
 		}
@@ -120,4 +133,18 @@ $: user = $page.data.user;
 			}
 		}
 	}
+
+	:global(html.no-js) #profile-menu{
+		display: block !important;
+		.profile-menu-content{
+			ul{
+				padding: 0;
+				margin: 0;
+				li{
+					display:inline-block;
+				}
+			}
+		}
+
+		}
 </style>

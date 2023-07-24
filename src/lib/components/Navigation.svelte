@@ -178,6 +178,18 @@
 </div>
 
 <style lang="scss">
+//  styling when js is disabled 
+// :global(html.no-js){
+// 	.nav-content .nav-content-inner{
+
+// 	}
+// }
+
+// instead of above in sass use 
+// :global(html.no-js) & {
+
+// }
+
 	.nav-content {
 		// light background on main content when the
 		//mobile sidebar menu is opened
@@ -205,6 +217,13 @@
 			height: 100vh;
 			overflow: auto;
 			display: none;
+			//always display sidebar when js is disabled
+			:global(html.no-js) & {
+				@include breakpoint.down('md'){
+					display:block;
+					height:auto;
+				}
+			}
 			ul {
 				padding: 0;
 				margin: 20px 0 0;
