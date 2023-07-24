@@ -41,3 +41,11 @@ type definitions of all spotify code
 
 ## Using typescript to extend native html attributes
 
+## tippy.js for dropdowns using actions
+ $actions alias in svelte.config.js file
+ >npm i tippy.js
+
+### creating custom theme for tippy
+
+https://atomiks.github.io/tippyjs/v6/themes/
+
