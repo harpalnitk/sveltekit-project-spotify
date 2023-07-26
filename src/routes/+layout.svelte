@@ -71,10 +71,17 @@ afterNavigate(() => {
 			<!-- div to control background color of top bar on scroll
 			
 			{`${headerOpacity}`}  passed as string  because it is being 
-		interpreted as false (0) on inital render on the server-->
+		interpreted as false (0) on inital render on the server
+	
+	we are getting the header color based on average color calculated
+	from album cover in routes/album/[id]/+page.ts file
+	
+	
+	
+	-->
 			<div
 				class="topbar-bg"
-				style:background-color="var(--header-color)"
+				style:background-color={$page.data.color ? $page.data.color: "var(--header-color)"}
 				style:opacity={`${headerOpacity}`}
 			/>
 			<Header/>
@@ -127,6 +134,11 @@ afterNavigate(() => {
 					top: 0;
 					left: 0;
 					z-index: -1;// need to make sure background is below content
+					// if the color from album is too light we want the background to be dark
+					// so that links appear
+					// 0.2 is opacity
+					//0,0,0 is black color
+					background-image: linear-gradient(rgba(0,0,0,0.2) 0 0);
 				}
 				@include breakpoint.up('md') {
 					padding: 0 30px;

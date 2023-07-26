@@ -53,7 +53,7 @@ $: user = $page.data.user;
 						</a>
 					</li>
 					<li><a href="/profile">View Profile</a></li>
-					<li><LogoutButton /></li>
+					<li><LogoutButton/></li>
 				</ul>
 			</div>
 		</div>
@@ -118,6 +118,7 @@ $: user = $page.data.user;
 					margin-left: 10px;
 				}
 				a,
+				// overriding styles of Button component
 				:global(button) {
 					display: inline-block;
 					padding: 10px 15px;
@@ -129,6 +130,11 @@ $: user = $page.data.user;
 					width: 100%;
 					text-align: left; // for button
 					font-size: functions.toRem(14);
+					border-radius: 0;
+					font-weight: 400;
+					&:hover{
+						background-image: none;
+					}
 				}
 			}
 		}

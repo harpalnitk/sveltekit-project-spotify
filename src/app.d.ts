@@ -7,8 +7,13 @@ declare global {
 		interface PageData {
 			user: SpotifyApi.CurrentUsersProfileResponse | null;
 			title?: string;
+			color?: string | null;
 		}
 		// interface Platform {}
+	}
+	// in helpers fetch-refresh.ts
+	declare interface Window {
+		refreshPromise: Promise<Response> | null;
 	}
 }
 

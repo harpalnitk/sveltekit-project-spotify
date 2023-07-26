@@ -1,7 +1,18 @@
 import type { PageLoad } from './$types';
+// during client side navigation the 
+// access token can expire so we create a helper for fetch will
+// check if fetch returns 401 error; if there is error in fetch we 
+// will use refresh token to get new access token
+import { fetchRefresh } from '$helpers';
 
-export const load: PageLoad = async ({ fetch, parent }) => {
-        //get data from root layout using parent
+export const load: PageLoad = async ({ fetch: _fetch, parent }) => {
+   
+   // instead of renaming fetch at all the places 
+   // creating our own fetch variable 
+   //and renamimg system fetch to _fetch
+   
+    const fetch = (path: string) => fetchRefresh(_fetch, path);
+    //get data from root layout using parent
     //in root layout user is returned
 	//data from layout is also available in pages and layouts
     //data from all parent layouts (including nested)

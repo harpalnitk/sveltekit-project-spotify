@@ -88,4 +88,19 @@ export const load: PageServerLoad = async ({ fetch, cookies }) => {
 };
 
 
-moved to +page.ts file and an API
+moved to +page.ts file and an API end point created; instead of using page.server.ts file
+
+
+## Average color of an image (Album cover)
+
+> npm i sharp
+install typescript definitions
+
+>npm i -D @types/sharp
+
+## Errors
+error.html file next to app.html file
+<!-- if error occurs in root layout  above file will be used-->
+
++error.svelte in route folder will handle errors on all pages
+

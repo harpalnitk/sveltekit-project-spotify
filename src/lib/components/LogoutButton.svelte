@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { invalidateAll } from '$app/navigation';
+	import {Button} from '$components';
 </script>
 
 <!-- on:submit  will run if js is enabled  -->
@@ -26,5 +27,5 @@
 		}
 	}}
 >
-	<button type="submit">Logout</button>
+	<Button element='button' type="submit">Logout</Button>
 </form>
