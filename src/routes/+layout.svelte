@@ -5,13 +5,14 @@
     import '../styles/main.scss';
 
     import type { LayoutData } from './$types';
-    import {Navigation} from '$components';
+    import {Navigation, Toasts} from '$components';
 	import {Header} from '$components';
 	import {page} from '$app/stores';
 	import NProgress from 'nprogress';
 	import { hideAll } from 'tippy.js';
     import 'nprogress/nprogress.css';
 	import { afterNavigate, beforeNavigate } from '$app/navigation';
+	
 
 	// we just need bar and not the spinner
 	// color and styles added in main.css
@@ -58,6 +59,9 @@ afterNavigate(() => {
 {#if user}
 <a href="#main-content" class="skip-link">Skip to Content</a>
 {/if}
+
+<Toasts/>
+
 
 <div id="main">
 	{#if user}

@@ -104,3 +104,14 @@ error.html file next to app.html file
 
 +error.svelte in route folder will handle errors on all pages
 
+
+## Toast messages
+
+few packages needed
+1. to generate unique id
+> npm i uniqid
+> npm i -D @types/uniqid
+
+toast store and toast component
+
+

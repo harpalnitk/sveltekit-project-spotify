@@ -2,15 +2,24 @@
 	import { page } from '$app/stores';
 	import { Button, ItemPage } from '$components';
 	import TrackList from '$components/TrackList.svelte';
-	import type { PageData } from './$types';
+	import { Heart } from 'lucide-svelte';
+	import type { ActionData, PageData } from './$types';
+	import { applyAction, enhance } from '$app/forms';
+	import { toasts } from '$stores';
 
 	export let data: PageData;
+	export let form: ActionData;// contain data that we return in our actions
 
 	let isLoading = false;
+	let isLoadingFollow= false;
+	// for focussing on follow/unfollow button using tab navigation
+	// after click
+	let followButton: Button<'button'>;
 
 	$: color = data.color;
 	$: playlist = data.playlist;
 	$: tracks = data.playlist.tracks;
+	$: isFollowing = data.isFollowing;
 	$: currentPage = $page.url.searchParams.get('page') || 1;
 
 // tracks have limit=100(we get only 100 tracks in 
@@ -42,7 +51,8 @@
 		if (res.ok) {
 			tracks = { ...resJSON, items: [...tracks.items, ...resJSON.items] };
 		} else {
-			alert(resJSON.error.message || 'Could not load data!');
+			//alert(resJSON.error.message || 'Could not load data!');
+			toasts.error(resJSON.error.message || 'Could not load data!')
 		}
 		isLoading = false;
 	};
@@ -65,6 +75,70 @@
 			<span>{followersFormat.format(playlist.followers.total)}</span>
 			<span>{playlist.tracks.total} Tracks</span>
 		</p>
+	</div>
+
+	<!-- follow unfollow button  -->
+	<div class="playlist-actions">
+		{#if data.user?.id === playlist.owner.id}
+			<Button element="a" variant="outline">Edit Playlist</Button>
+		<!-- if isFollowing is null then it means that the request 
+		which we sent in load function of page.ts to check whether the 
+		user is following playlist or not has failed and in that case we won't 
+		show anything -->
+			{:else if isFollowing !== null}
+			<form
+				class="follow-form"
+				method="POST"
+				action={`?/${isFollowing ? 'unFollowPlaylist' : 'followPlaylist'}`}
+			    use:enhance={
+				//this function will be called when we submit our action
+				()=>{
+				//! By having custom function default behavior will not happen	
+					
+				isLoadingFollow = true;
+				
+				
+				
+				//this function will be called when action is completed with fail,redirect or success
+				return async ({result})=>{
+				// return ({update})=>{
+					isLoadingFollow = false;
+					//will resume default behavior of use:enhance
+					
+					//update();
+
+					// there is delay in updation of ui of button because
+					//the page is invalidated and load funcion will run 
+					//again to get the playlist data
+
+					// in this case we don't need to invalidate the page;
+					//therefore we will use applyAction() instead of update()
+					await applyAction(result);
+					// apply action will update form prop
+					// this function(applyAction) will also perform default behavior
+					//of use:enhance but it will not invalidate our page and therefor
+					//button will not be updated on it's own
+					// so we will do this
+					followButton.focus()
+					if(result.type === 'success'){
+						isFollowing = !isFollowing;
+					}
+				}
+				}}
+				>
+				<Button 
+				bind:this={followButton}
+				element="button" type="submit" variant="outline" disabled={isLoadingFollow}>
+					<Heart aria-hidden focusable="false" fill={isFollowing ? 'var(--text-color)' : 'none'} />
+					{isFollowing ? 'Unfollow' : 'Follow'}
+					<!-- for accessibility  -->
+					<span class="visually-hidden">{playlist.name} playlist</span>
+				</Button>
+				{#if form?.followError}
+					<p class="error">{form.followError}</p>
+				{/if}
+			</form>
+		{/if}
 	</div>
 
 	{#if playlist.tracks.items.length > 0}
@@ -157,6 +231,27 @@ of load more button  -->
 		justify-content: space-between;
 		:global(html.no-js) & {
 			display: flex;
+		}
+	}
+	.playlist-actions {
+		display: flex;
+		justify-content: flex-end;
+		margin: 10px 0 30px;
+		.follow-form {
+			:global(.button) {
+				display: flex;
+				align-items: center;
+				:global(svg) {
+					margin-right: 10px;
+					width: 22px;
+					height: 22px;
+				}
+			}
+			p.error {
+				text-align: right;
+				color: var(--error);
+				font-size: functions.toRem(14);
+			}
 		}
 	}
 </style>

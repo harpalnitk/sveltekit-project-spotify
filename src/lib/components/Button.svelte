@@ -28,6 +28,15 @@ interface ButtonComponentElements {
 	export let element: 'button' | 'a';
 	export let variant: 'solid' | 'outline' | 'danger' = 'solid';
 	export let className: string = '';
+
+	// focus exported //in follow unfollow button on clicking we loose
+	//focus so exporting focus here, so that we can use it in /playlist/[id] page
+	//in follow/ubfollow button (navigation using tab)
+
+	let node:HTMLAnchorElement | HTMLButtonElement;
+	export function focus(){
+          node.focus();
+	}
 </script>
 
 <!-- button can be button or anchor tag  
@@ -44,6 +53,7 @@ which has this and this can receive html element
 
 <!-- {...$$restProps} any other props passed to this component  -->
 <svelte:element
+    bind:this={node}
 	this={element}
 	class="button button-{variant} {className}"
 	on:click
