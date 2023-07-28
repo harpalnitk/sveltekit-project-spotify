@@ -114,4 +114,19 @@ few packages needed
 
 toast store and toast component
 
+## Modal
+
+using library Micromodal.js
+pure js library
+> npm i micromodal
+> npm i -D @types/micromodal
+
+//In root layout init library once
+	import MicroModal from 'micromodal';
+
+	// Only in browser 
+	if(browser){
+		MicroModal.init();
+	}
+
 

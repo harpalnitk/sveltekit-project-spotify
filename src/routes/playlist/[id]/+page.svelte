@@ -1,16 +1,24 @@
 <script lang="ts">
 	import { page } from '$app/stores';
-	import { Button, ItemPage } from '$components';
-	import TrackList from '$components/TrackList.svelte';
+	import { invalidate } from '$app/navigation';
+	import { Button, ItemPage, PlaylistForm, TrackList, Modal  } from '$components';
 	import { Heart } from 'lucide-svelte';
+	// ActionData from types generated in +page.server.ts file Actions
+	// PageData from both page.ts and page.server.ts files
 	import type { ActionData, PageData } from './$types';
+	import type { ActionData as EditActionData } from './edit/$types';
 	import { applyAction, enhance } from '$app/forms';
 	import { toasts } from '$stores';
+	import MicroModal from 'micromodal';
+	import { tick } from 'svelte';
 
 	export let data: PageData;
-	export let form: ActionData;// contain data that we return in our actions
+	export let form: ActionData | EditActionData;// contain data that we return in our actions
+// we are receiving form data from two forms follow/unfollow form 
+// and edit playlist form
 
-	let isLoading = false;
+
+    let isLoading = false;
 	let isLoadingFollow= false;
 	// for focussing on follow/unfollow button using tab navigation
 	// after click
@@ -72,7 +80,7 @@
 		<p class="playlist-description">{@html playlist.description}</p>
 		<p class="meta">
 			<span>{playlist.owner.display_name}</span>
-			<span>{followersFormat.format(playlist.followers.total)}</span>
+			<span>{followersFormat.format(playlist.followers.total)} Followers</span>
 			<span>{playlist.tracks.total} Tracks</span>
 		</p>
 	</div>
@@ -80,7 +88,15 @@
 	<!-- follow unfollow button  -->
 	<div class="playlist-actions">
 		{#if data.user?.id === playlist.owner.id}
-			<Button element="a" variant="outline">Edit Playlist</Button>
+			<Button element="a" variant="outline"
+			href="/playlist/{playlist.id}/edit"
+			on:click={(e)=>{
+				//if js is enabled prevent default of anchor tag
+				//and show modal instead
+                 e.preventDefault();
+				 MicroModal.show('edit-playlist-modal');
+			}}
+			>Edit Playlist</Button>
 		<!-- if isFollowing is null then it means that the request 
 		which we sent in load function of page.ts to check whether the 
 		user is following playlist or not has failed and in that case we won't 
@@ -134,7 +150,8 @@
 					<!-- for accessibility  -->
 					<span class="visually-hidden">{playlist.name} playlist</span>
 				</Button>
-				{#if form?.followError}
+				<!-- followForm is identifier for this form  -->
+				{#if form && 'followForm' in form && form?.followError}
 					<p class="error">{form.followError}</p>
 				{/if}
 			</form>
@@ -188,6 +205,23 @@ of load more button  -->
 		</div>
 	{/if}
 </ItemPage>
+
+<Modal id="edit-playlist-modal" title="Edit {playlist.name}">
+
+<!-- action passed because we are invoking action from a different route  -->
+	<PlaylistForm
+		action="/playlist/{playlist.id}/edit"
+		{playlist}
+		form={form && 'editForm' in form ? form : null}
+		on:success={() => {
+			MicroModal.close('edit-playlist-modal');
+			//run load function again
+			// invalidate can be called wither with an identifier 
+			// or any of the URL in the load function
+			invalidate(`/api/spotify/playlists/${playlist.id}`);
+		}}
+	/>
+</Modal>
 
 <style lang="scss">
 	.empty-playlist {

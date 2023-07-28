@@ -20,7 +20,9 @@ export const actions: Actions = {
 		if (!res.ok) {
             // validation errors are sent using fail
             // other method is redirect
-			return fail(res.status, { followError: res.statusText });
+			// followForm: true  identifier added because on page.svelte
+			// we have two forms
+			return fail(res.status, { followError: res.statusText, followForm: true });
 		}
         // if we don't return anything it will be considered successful action
 	},
@@ -32,7 +34,7 @@ export const actions: Actions = {
 			}
 		});
 		if (!res.ok) {
-			return fail(res.status, { followError: res.statusText });
+			return fail(res.status, { followError: res.statusText, followForm: true  });
 		}
 	}
 };

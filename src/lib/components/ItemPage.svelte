@@ -12,7 +12,7 @@
     <!-- empty div for color background -->
     <div
     class="banner-gradient"
-    style:background-image="linear-gradient(0deg, transparent, {color || 'var(--light-gray)'}"
+    style:background-image="linear-gradient(0deg, transparent, {color || 'var(--light-gray)'})"
 />
 
 <!-- gradient from bottom transparent to top color  -->

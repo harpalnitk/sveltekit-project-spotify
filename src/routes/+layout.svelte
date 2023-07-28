@@ -12,11 +12,22 @@
 	import { hideAll } from 'tippy.js';
     import 'nprogress/nprogress.css';
 	import { afterNavigate, beforeNavigate } from '$app/navigation';
+
+	//for Modals
+	import MicroModal from 'micromodal';
+	import { browser } from '$app/environment';
 	
 
 	// we just need bar and not the spinner
 	// color and styles added in main.css
 	NProgress.configure({ showSpinner: false });
+
+	//For Modals
+	// Only in browser 
+	if(browser){
+		MicroModal.init();
+	}
+	
     	
 	let topbar: HTMLElement;
 	let scrollY: number;
