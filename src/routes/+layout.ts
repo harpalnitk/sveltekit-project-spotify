@@ -6,7 +6,9 @@ export const load = (async ({ data, url }) => {
 
 	// since data can be undefined and we cannot destructure undefined
 	//adding for safety empty object
-	const { user } = data || {};
+	// we need to return the fata from server file in page 
+	// File also so that it is available in svelte file 
+	const { user, userAllPlaylists } = data || {};
 	
 	// if logged in and accessing login page redirect to home
 	if (user && url.pathname === '/login') {
@@ -20,6 +22,7 @@ export const load = (async ({ data, url }) => {
 	}
 
 	return {
-		user
+		user,
+		userAllPlaylists
 	};
 }) satisfies LayoutLoad;

@@ -1,9 +1,11 @@
-<script>
+<script lang='ts'>
 	import { browser } from '$app/environment';
 import { LogoutButton,Navigation } from '$components';
 import { page } from '$app/stores';
 import { ChevronDown, ExternalLink  } from 'lucide-svelte';
 import {tippy} from '$actions';
+
+export let userAllPlaylists: SpotifyApi.PlaylistObjectSimplified[] | undefined; 
 
 $: user = $page.data.user;
 </script>
@@ -14,7 +16,7 @@ $: user = $page.data.user;
 		so we want to render mobile sidebar menu only on the browser 
 		and not on the server -->
 		{#if browser}
-		<Navigation desktop={false} />
+		<Navigation desktop={false} {userAllPlaylists}/>
 		{/if}
 	</div>
 	<div class="right">

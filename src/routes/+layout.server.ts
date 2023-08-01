@@ -25,8 +25,19 @@ export const load = (async ({ cookies, fetch, url }) => {
 	});
 	if (profileRes.ok) {
 		const profile: SpotifyApi.CurrentUsersProfileResponse = await profileRes.json();
+		// fetch all playlists created by user so that they
+		//are available throught the app
+		let userAllPlaylists: SpotifyApi.PlaylistObjectSimplified[] = [];
+		const userPlaylistsRes = await fetch('/api/spotify/me/playlists?limit=50');
+		if (userPlaylistsRes.ok) {
+			const userPlaylistsResJSON: SpotifyApi.ListOfCurrentUsersPlaylistsResponse =
+				await userPlaylistsRes.json();
+			userAllPlaylists = userPlaylistsResJSON.items;
+		}
+		
 		return {
-			user: profile
+			user: profile,
+			userAllPlaylists
 		};
 	} 
 	// if access token is expired	

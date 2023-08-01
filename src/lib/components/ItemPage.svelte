@@ -18,7 +18,7 @@
 <!-- gradient from bottom transparent to top color  -->
 	<div class="cover">
 		{#if image}
-			<img src={image} alt={title} />
+			<img class='cover-img' src={image} alt={title} />
 		{:else}
 			<div class="cover-placeholder">
 				<Music focusable="false" aria-hidden color='var(--light-gray)'/>

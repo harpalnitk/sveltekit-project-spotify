@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { page } from '$app/stores';
-	import { invalidate } from '$app/navigation';
+	import {  invalidateAll } from '$app/navigation';
 	import { Button, ItemPage, PlaylistForm, TrackList, Modal  } from '$components';
 	import { Heart } from 'lucide-svelte';
 	// ActionData from types generated in +page.server.ts file Actions
@@ -11,6 +11,7 @@
 	import { toasts } from '$stores';
 	import MicroModal from 'micromodal';
 	import { tick } from 'svelte';
+	//import { tick } from 'svelte';
 
 	export let data: PageData;
 	export let form: ActionData | EditActionData;// contain data that we return in our actions
@@ -127,18 +128,31 @@
 					//the page is invalidated and load funcion will run 
 					//again to get the playlist data
 
-					// in this case we don't need to invalidate the page;
-					//therefore we will use applyAction() instead of update()
-					await applyAction(result);
+
 					// apply action will update form prop
 					// this function(applyAction) will also perform default behavior
 					//of use:enhance but it will not invalidate our page and therefor
 					//button will not be updated on it's own
 					// so we will do this
-					followButton.focus()
+					
 					if(result.type === 'success'){
 						isFollowing = !isFollowing;
+					// in this case we don't need to invalidate the page;
+					//therefore we will use applyAction() instead of update()
+					await applyAction(result);
+					}else if(result.type === 'failure'){
+                           toasts.error(result.data?.followError);
+						   await tick();
+					} else {
+						await applyAction(result);
 					}
+					followButton.focus();
+                   // because when we follow or unfollow a playlist
+				   // it should be removed from user's playlists displayed
+				   // in the sidebar which are loaded in the root layout
+				   //invalidateAll() will run the load function of the
+				   // root layout
+					invalidateAll();
 				}
 				}}
 				>
@@ -159,7 +173,13 @@
 	</div>
 
 	{#if playlist.tracks.items.length > 0}
-		<TrackList tracks={filteredTracks} />
+		<TrackList tracks={filteredTracks}
+		isOwner={data.user?.id === playlist.owner.id} 
+		userPlaylists= {data.userAllPlaylists?.filter((pl)=> pl.owner.id === data.user?.id)}/>
+		<!-- data.userAllPlaylists from root layout 
+		however userAllPlaylists will contain both playlists
+	     one which user follows and one wof which user is owner
+         so we need to filter to pass only those of which user is owner -->
 		{#if tracks.next}
 		<div class="load-more">
 			<Button element="button" variant="outline" disabled={isLoading} on:click={loadMoreTracks}
@@ -218,7 +238,15 @@ of load more button  -->
 			//run load function again
 			// invalidate can be called wither with an identifier 
 			// or any of the URL in the load function
-			invalidate(`/api/spotify/playlists/${playlist.id}`);
+			
+			//invalidate(`/api/spotify/playlists/${playlist.id}`);
+
+			// since we are also fetching allPlaylists in root layout
+			// for displaying in sidebar
+			// as such on edit of a playlist we need to load the
+			//entire app again we need to call invalidateAll
+			// instead of just invalidate
+			invalidateAll()
 		}}
 	/>
 </Modal>
