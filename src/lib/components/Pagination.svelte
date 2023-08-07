@@ -3,7 +3,7 @@
 	import { Button } from '$components';
 	import { createEventDispatcher } from 'svelte';
 
-	export let paginatedList: SpotifyApi.PagingObject<any>;
+	export let paginatedList: SpotifyApi.PagingObject<any> | SpotifyApi.CursorBasedPagingObject<any>;
 	export let isLoading: boolean;
 
 	$: currentPage = $page.url.searchParams.get('page') || 1;
@@ -27,6 +27,10 @@
 {/if}
 
 <!-- when js is disabled next and prev buttons instead of load more button  -->
+{#if 'previous' in paginatedList}
+	<!-- in some response cursor based pagination response is received
+	with no previous ; in that case if js is disabled we cannot display 
+	pagination -->
 
 <div class="pagination">
 	<div class="previous">
@@ -56,6 +60,7 @@
 		{/if}
 	</div>
 </div>
+{/if}
 
 <style lang="scss">
 	.pagination {

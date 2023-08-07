@@ -11,3 +11,5 @@ export { default as Toasts } from './Toasts.svelte';
 export { default as Pagination } from './Pagination.svelte';
 export { default as PlaylistForm } from './PlaylistForm.svelte';
 export { default as Modal } from './Modal.svelte';
+export { default as SearchForm } from './SearchForm.svelte';
+export { default as HeaderNav } from './HeaderNav.svelte';

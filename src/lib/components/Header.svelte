@@ -1,6 +1,6 @@
 <script lang='ts'>
 	import { browser } from '$app/environment';
-import { LogoutButton,Navigation } from '$components';
+import { LogoutButton,Navigation,SearchForm ,HeaderNav  } from '$components';
 import { page } from '$app/stores';
 import { ChevronDown, ExternalLink  } from 'lucide-svelte';
 import {tippy} from '$actions';
@@ -18,6 +18,12 @@ $: user = $page.data.user;
 		{#if browser}
 		<Navigation desktop={false} {userAllPlaylists}/>
 		{/if}
+		<HeaderNav />
+		{#if $page.url.pathname.startsWith('/search')}
+		<div class="search-form">
+			<SearchForm />
+		</div>
+	{/if}
 	</div>
 	<div class="right">
 		<div id="profile-button">
@@ -63,6 +69,14 @@ $: user = $page.data.user;
 </div>
 
 <style lang="scss">
+	// for smaller screens search form displayed in content (layout main)
+	//instead of header
+		.search-form {
+		display: none;
+		@include breakpoint.up('lg') {
+			display: block;
+		}
+	}
 	.content {
 		display: flex;
 		justify-content: space-between;

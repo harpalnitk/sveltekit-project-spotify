@@ -5,7 +5,13 @@
 
 	let isRetrying = false;
 	//routes on which retyr button should appear
-	const retryRoutes = ['/album/[id]','/playlist/[id]'];
+	const retryRoutes = [
+		'/album/[id]',
+		'/playlist/[id]',
+		'/artist/[id]',
+	    '/search/[query]',
+	    '/[list=list]/[...rest]'
+	];
 </script>
 
 <svelte:head>

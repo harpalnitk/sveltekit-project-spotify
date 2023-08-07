@@ -5,7 +5,7 @@
     import '../styles/main.scss';
 
     import type { LayoutData } from './$types';
-    import {Navigation, Toasts} from '$components';
+    import {Navigation, SearchForm, Toasts} from '$components';
 	import {Header} from '$components';
 	import {page} from '$app/stores';
 	import NProgress from 'nprogress';
@@ -126,7 +126,13 @@ afterNavigate(() => {
 			<Header {userAllPlaylists}/>
 		</div>
 		{/if}
-		<main id="main-content" class:logged-in={user} style="height:1000px">
+		<main id="main-content" class:logged-in={user}>
+			 <!-- for larger screens search form included in header  -->
+			{#if $page.url.pathname.startsWith('/search')}
+			<div class="search-form">
+				<SearchForm />
+			</div>
+		{/if}
 			<slot />
 		</main>
 	</div>
@@ -210,6 +216,16 @@ afterNavigate(() => {
 
 			main#main-content {
 				padding: 30px 15px 60px;
+               // for large screens search form included in header
+				.search-form{
+                     margin-bottom: 40px;
+					 @include breakpoint.up('lg'){
+						display: none;
+					 }    
+					 :global(input){
+						width: 100%;
+					 }  
+				}
 				@include breakpoint.up('md') {
 					padding: 30px 30px 60px;
 				}
